@@ -1,0 +1,16 @@
+# Fetched data. All of it is reproducible from src/fetch_*.py, the registry
+# dumps run to several MB, and the FMCSA census pull carries personal email
+# addresses belonging to individual registrants -- public record, but not
+# something to republish.
+data/
+
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
