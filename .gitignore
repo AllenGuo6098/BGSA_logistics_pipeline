@@ -1,9 +1,17 @@
-# Fetched data. All of it is reproducible from src/fetch_*.py, the registry
-# dumps run to several MB, and the FMCSA census pull carries personal email
-# addresses belonging to individual registrants -- public record, but not
-# something to republish.
-data/
+# --- Raw registry dumps: NOT committed -------------------------------------
+# All three are reproducible with `python src/fetch_sources.py` and run to
+# several MB of noise. The processed universe they feed into IS committed.
+data/raw/fmc_nvocc.csv
+data/raw/fmc_ocean_freight_forwarders.csv
+data/raw/cbp_permitted_brokers.csv
 
+# The FMCSA census pull carries 8,845 rows including personal email addresses
+# belonging to individual registrants (many gmail/aol). Public record, but
+# republishing it is a different act from reading it. Regenerate with
+# `python src/fetch_fmcsa.py` if you need it.
+data/raw/fmcsa_asset_light.csv
+
+# --- Everything else -------------------------------------------------------
 __pycache__/
 *.py[cod]
 .venv/

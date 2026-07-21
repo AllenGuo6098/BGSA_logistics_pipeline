@@ -1,0 +1,25 @@
+BGSA sourcing pipeline - Phase 1 (universe build)
+
+RAW REGISTRY ROWS
+  CBP permitted broker permits      : 2,407
+  FMC ocean freight forwarders      : 3,272
+  FMC NVOCCs                        : 9,045
+
+GEOGRAPHY FILTER: North America (US/CA/MX)
+  FMC ocean freight forwarders      : 3,271
+  FMC NVOCCs                        : 4,542
+
+DEDUPLICATED UNIVERSE
+  Distinct companies                : 7,124
+  Appearing in >1 registry          : 2,744
+
+  by registry (post-dedup):
+    cbp_customs_broker                : 2,402
+    fmc_nvocc                         : 4,511
+    fmc_ocean_freight_forwarder       : 3,256
+
+CONTACTABILITY
+  with a phone number               : 6,445
+  with an email address             : 388
+
+Output: F:\OSG\boutique search\boutique_search_bot\BGSA_workflow\data\processed\universe_pilot.csv
