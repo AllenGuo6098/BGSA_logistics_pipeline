@@ -88,9 +88,10 @@ CBSA_BROKERS_RAW = RAW / "cbsa_licensed_brokers.csv"
 MEXICO_SOURCE_STATUS = "unresolved - CAAAREM cert failure, needs a look"
 
 # ---------------------------------------------------------------------------
-# Scope. North American (US / Canada / Mexico) rather than US-only. Note this barely moves the ocean-side numbers -- FMC's forwarder
-# list is 3,269/3,272 US by construction, and the NVOCC list adds only 111
-# Canadian and 5 Mexican entities. The real N.A. expansion is CBSA + FMCSA.
+# Scope. North American (US / Canada / Mexico) rather than US-only. Note this
+# barely moves the ocean-side numbers -- FMC's forwarder list is 3,269 of 3,272
+# US by construction, and the NVOCC list adds only 111 Canadian and 5 Mexican
+# entities. The real North American expansion is CBSA + FMCSA.
 # ---------------------------------------------------------------------------
 NORTH_AMERICA_ONLY = True
 NA_COUNTRY_VALUES = {
