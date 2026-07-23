@@ -22,3 +22,9 @@ venv/
 Thumbs.db
 .vscode/
 .idea/
+
+# --- DOL Form 5500 bulk datasets -------------------------------------------
+# ~1.5GB across the full form and the short form, and reproducible with
+# `python src/headcount.py`. Not committed.
+data/raw/f5500_*.csv
+data/raw/f5500sf_*.csv

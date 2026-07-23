@@ -1,0 +1,13 @@
+﻿First name,Last name,Email,Job title,Associated company,Contact owner,tgt_contact_status,tgt_dedupe_key
+,,,,Horizon Air Freight,,needs enrichment: name + email,NAME:horizonairfreight
+Margie,Shapiro,,President,Samuel Shapiro & Co.,,name from research; email needs enrichment,NAME:samuelshapiroco
+,,,,John F. Kilroy Co.,,needs enrichment: name + email,NAME:johnfkilroyco
+,,,,C.H. Powell Company,,needs enrichment: name + email,NAME:chpowellcompany
+,,,,Hoyt Shepston & Sciaroni,,needs enrichment: name + email,NAME:hoytshepstonsciaroni
+,,,,Western Overseas Corp.,,needs enrichment: name + email,NAME:westernoverseascorp
+Don,Brown Sr.,,Chairman,Rogers & Brown,,name from research; email needs enrichment,NAME:rogersbrown
+Charles,M. Schayer Jr.,,Principal,Charles M. Schayer & Co.,,name from research; email needs enrichment,NAME:charlesmschayerco
+,,,,Page & Jones,,needs enrichment: name + email,NAME:pagejones
+Chas,Watson Jr.,,President,R.L. Swearer Company,,name from research; email needs enrichment,NAME:rlswearercompany
+,,,,A.N. Deringer,,needs enrichment: name + email,NAME:anderinger
+Asim,Faiz,,Principal,Carmichael International Service,,name from research; email needs enrichment,NAME:carmichaelinternationalservice

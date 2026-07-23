@@ -1,0 +1,115 @@
+{
+  "name": "Logistics Sourcing Pipeline (reference skeleton)",
+  "meta": {
+    "description": "End-to-end orchestration for the logistics target pipeline. Python does the analytical core (source, score, profile, export); this n8n graph moves the output between systems on a schedule. Credential IDs, CRM object names and the enrichment endpoint are PLACEHOLDERS - they are the open questions to confirm with the client before this runs live. Import into n8n, then fill the nodes marked TODO.",
+    "author": "Allen Guo",
+    "stage": "reference skeleton - not yet wired to live credentials"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "rule": { "interval": [ { "field": "weeks", "weeksInterval": 1 } ] }
+      },
+      "name": "Weekly trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [ 240, 300 ],
+      "notes": "Refresh the universe weekly. Registries and Form 5500 update slowly, so weekly is plenty."
+    },
+    {
+      "parameters": {
+        "command": "python src/run_pipeline.py --emit outputs/"
+      },
+      "name": "Run Python pipeline",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [ 460, 300 ],
+      "notes": "Source -> dedupe -> score -> profile -> CRM CSVs. Deterministic, auditable. This is the analytical core; everything after this node just moves its output."
+    },
+    {
+      "parameters": {
+        "filePath": "outputs/crm_companies.csv",
+        "options": {}
+      },
+      "name": "Read companies CSV",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [ 680, 220 ]
+    },
+    {
+      "parameters": {
+        "authentication": "headerAuth",
+        "url": "https://api.apollo.io/v1/organizations/enrich",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": { "parameters": [ { "name": "domain", "value": "={{ $json[\"Company domain name\"] }}" } ] },
+        "options": {}
+      },
+      "name": "Enrich contact (Apollo) - TODO creds",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [ 900, 220 ],
+      "disabled": true,
+      "notes": "DISABLED until the client confirms an enrichment seat. domain -> named contact + verified email. Swap the URL for ZoomInfo/Cognism if that is what they hold; the shape is the same. If no seat exists, leave disabled and the email stays a manual step."
+    },
+    {
+      "parameters": {
+        "resource": "company",
+        "operation": "upsert",
+        "options": {}
+      },
+      "name": "Upsert to CRM - TODO object map",
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2,
+      "position": [ 1140, 220 ],
+      "notes": "Upsert on tgt_dedupe_key (EIN or domain), so a re-run updates rather than duplicates. If the CRM is Affinity or DealCloud rather than HubSpot, replace this node with that service's node - the field mapping is in AUTOMATION.md."
+    },
+    {
+      "parameters": {
+        "filePath": "outputs/crm_contacts.csv",
+        "options": {}
+      },
+      "name": "Read contacts CSV",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [ 680, 400 ]
+    },
+    {
+      "parameters": {
+        "modelId": "claude-opus-4-8",
+        "messages": { "values": [ { "content": "Write a 90-word first-touch email to {{ $json[\"First name\"] }} at {{ $json[\"Associated company\"] }}, an independent logistics firm. One specific, true hook from the profile. No fabricated numbers. Warm, brief, from a junior analyst at an advisory firm exploring whether they would ever consider a conversation." } ] },
+        "options": {}
+      },
+      "name": "Draft outreach copy (Claude)",
+      "type": "n8n-nodes-base.anthropic",
+      "typeVersion": 1,
+      "position": [ 900, 400 ],
+      "notes": "Claude writes the language, not the data. The profile facts are passed in; the model only phrases them. Same honesty rule as the rest of the pipeline: no invented figures."
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "create",
+        "options": {}
+      },
+      "name": "Create mail draft - human sends",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [ 1140, 400 ],
+      "notes": "DRAFT only, never send. A person reviews and sends from their own mailbox. Swap for the Microsoft Outlook node if the team is on M365. Gate every draft against the do-not-contact / current-client list before this node - that list is an open item with the client."
+    }
+  ],
+  "connections": {
+    "Weekly trigger": { "main": [ [ { "node": "Run Python pipeline", "type": "main", "index": 0 } ] ] },
+    "Run Python pipeline": { "main": [ [
+      { "node": "Read companies CSV", "type": "main", "index": 0 },
+      { "node": "Read contacts CSV", "type": "main", "index": 0 }
+    ] ] },
+    "Read companies CSV": { "main": [ [ { "node": "Enrich contact (Apollo) - TODO creds", "type": "main", "index": 0 } ] ] },
+    "Enrich contact (Apollo) - TODO creds": { "main": [ [ { "node": "Upsert to CRM - TODO object map", "type": "main", "index": 0 } ] ] },
+    "Read contacts CSV": { "main": [ [ { "node": "Draft outreach copy (Claude)", "type": "main", "index": 0 } ] ] },
+    "Draft outreach copy (Claude)": { "main": [ [ { "node": "Create mail draft - human sends", "type": "main", "index": 0 } ] ] }
+  },
+  "settings": {},
+  "active": false
+}
